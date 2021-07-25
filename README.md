@@ -1,11 +1,11 @@
-# NonBlockingDallas Non blocking temperature sensor library
+# Non blocking temperature sensor library
 
-This simple library implements a machine state for reading the DS18B20 sensor without blocking the main loop() of the sketch. It is designed for a continuos sensor reading every amount of time configurable by the developer by passing the time interval to the constructor of the class among with the sensor resolution and unit of measure.
-While the conversion is in progress, the main loop() continues to run so that the sketch can execute other tasks.
+This simple library implements a machine state for reading the Maxim Integrated DS18B20 temperature sensor without blocking the main loop() of the sketch. It is designed for a continuos sensor reading every amount of time configurable by the developer by passing the time interval to the constructor of the class among with the sensor resolution and the unit of measure.
+While the conversion is in progress, the main loop() continues to run so that the sketch can execute other tasks. When the temperature reading is ready, a callback is invoked. At full resolution the conversion time takes up to 750 milliseconds, a huge amount of time, thus the importance of the library to avoid blocking the sketch execution.
 
 # Sensor Resolution
 
-The converstion time depends upon the resolution of the sensor, thus the time interval must be greater than the conversion time.
+The conversion time depends upon the resolution of the sensor, thus the time interval must be greater than the conversion time.
 
 | Resolution  | Convertion time |
 | ------------- | ------------- |
