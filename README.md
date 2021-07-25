@@ -85,4 +85,4 @@ void handleTemperatureChange(float temperature, bool valid){
 
 ***
 
-Please see the [Example](examples/TemperatureReading.ino) for a complete working sketch
+Please see the [Example](https://github.com/Gbertaz/NonBlockingDallas/blob/master/examples/TemperatureReading/TemperatureReading.ino) for a complete working sketch
