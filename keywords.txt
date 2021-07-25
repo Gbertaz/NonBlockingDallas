@@ -1,0 +1,24 @@
+#######################################
+# Syntax Coloring Map For NonBlockingDallas
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+NonBlockingDallas	KEYWORD1
+resolution	KEYWORD1
+unitsOfMeasure	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+begin	KEYWORD2
+update	KEYWORD2
+onIntervalElapsed	KEYWORD2
+onTemperatureChange	KEYWORD2
+
+#######################################
+# Constants (LITERAL1)
+#######################################
+
