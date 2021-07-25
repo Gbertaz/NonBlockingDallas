@@ -16,7 +16,17 @@ The conversion time depends upon the resolution of the sensor, thus the time int
 
 # Callbacks
 
- The library is callback driven: one callback is raised every time the timer interval is elapsed, the second one is invoked only when the temperature changes. 
+ The library is callback driven: *onIntervalElapsed* is invoked every time the timer interval is elapsed, *onTemperatureChange* is invoked only when the temperature changes.
+ 
+ ```
+ void onIntervalElapsed(void(*callback)(float temperature, bool valid)) {
+		cb_onIntervalElapsed = callback;
+	}
+ 
+	void onTemperatureChange(void(*callback)(float temperature, bool valid)) {
+		cb_onTemperatureChange = callback;
+	}
+ ```
 
 # Prerequisites
 
@@ -24,7 +34,7 @@ This library uses OneWire and DallasTemperature libraries, so you will need to h
 
 # Usage
 
-## Step 1
+### Step 1
 
 Include the required libreries:
 
@@ -34,17 +44,17 @@ Include the required libreries:
 #include <NonBlockingDallas.h>
 ```
 
-## Step 2
+### Step 2
 
 Create the instance of the classes:
 
 ```
-OneWire oneWire(2);
+OneWire oneWire(ONE_WIRE_BUS);
 DallasTemperature dallasTemp(&oneWire);
 NonBlockingDallas sensorDs18b20(dallasTemp);
 ```
 
-## Step 3
+### Step 3
 
 Initialize the sensor and set the callbacks. 
 The parameters of the begin function are the sensor resolution, unit of measure and time interval in milliseconds.
@@ -64,7 +74,7 @@ Possible values are:
 * unit_F for Fahrenheit
 
 
-## Step 4
+### Step 4
 
 Implement the callbacks' functions and call the update() inside the main loop()  
 
