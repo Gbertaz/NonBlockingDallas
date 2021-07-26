@@ -1,11 +1,11 @@
-# Non blocking temperature sensor library
+# Non blocking temperature sensor library for Arduino
 
-This simple library implements a machine state for reading the Maxim Integrated DS18B20 temperature sensor without blocking the main loop() of the sketch. It is designed for a continuos sensor reading every amount of time configurable by the developer by passing the time interval to the constructor of the class among with the sensor resolution and the unit of measure.
+This simple library for Arduino implements a machine state for reading the **Maxim Integrated DS18B20 temperature sensor** without blocking the main loop() of the sketch. It is designed for a **continuos sensor reading** every amount of time configurable by the developer.\
 While the conversion is in progress, the main loop() continues to run so that the sketch can execute other tasks. When the temperature reading is ready, a callback is invoked. At full resolution the conversion time takes up to 750 milliseconds, a huge amount of time, thus the importance of the library to avoid blocking the sketch execution.
 
 # Sensor Resolution
 
-The conversion time depends upon the resolution of the sensor, thus the time interval must be greater than the conversion time.
+The conversion time depends upon the resolution of the sensor, thus the **time interval** parameter passed to the *begin* function must be greater than or equal to the conversion time.
 
 | Resolution  | Convertion time |
 | ------------- | ------------- |
@@ -56,8 +56,8 @@ NonBlockingDallas sensorDs18b20(dallasTemp);
 
 ### Step 3
 
-Initialize the sensor and set the callbacks. 
-The parameters of the begin function are the sensor resolution, unit of measure and time interval in milliseconds.
+Initialize the sensor and set the callbacks.
+The parameters of the *begin* function are the **sensor resolution**, **unit of measure** (Celsius or Fahrenheit) and time interval in milliseconds.
 
 ```
 sensorDs18b20.begin(NonBlockingDallas::resolution_12, NonBlockingDallas::unit_C, 1500);
@@ -76,7 +76,7 @@ Possible values are:
 
 ### Step 4
 
-Implement the callbacks' functions and call the update() inside the main loop()  
+Implement the callbacks' functions and call the *update* function inside the main loop()  
 
 ```
 
