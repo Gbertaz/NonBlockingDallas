@@ -3,6 +3,31 @@
 This simple library for Arduino implements a machine state for reading the **Maxim Integrated DS18B20 temperature sensor** without blocking the main loop() of the sketch. It is designed for a **continuos sensor reading** every amount of time configurable by the developer.\
 While the conversion is in progress, the main loop() continues to run so that the sketch can execute other tasks. When the temperature reading is ready, a callback is invoked. At full resolution the conversion time takes up to 750 milliseconds, a huge amount of time, thus the importance of the library to avoid blocking the sketch execution.
 
+# Features
+
+Supports up to 15 sensors on the same ONE WIRE bus. To get some debug information, simply remove the comment on following line in *NonBlockingDallash.h*:
+
+```
+#define DEBUG_DS18B20
+```
+
+The output will be like the following:
+
+```
+DS18B20: 3 sensors found on the bus
+DS18B20: parasite power is OFF
+DS18B20: requested new reading
+DS18B20 (0): 29.37 °C
+DS18B20 (1): 29.12 °C
+DS18B20 (2): 29.26 °C
+DS18B20: requested new reading
+DS18B20 (0): 29.37 °C
+DS18B20 (1): 29.12 °C
+DS18B20 (2): 29.26 °C
+...
+```
+
+
 # Sensor Resolution
 
 The conversion time depends upon the resolution of the sensor, thus the **time interval** parameter passed to the *begin* function must be greater than or equal to the conversion time.
@@ -17,16 +42,17 @@ The conversion time depends upon the resolution of the sensor, thus the **time i
 # Callbacks
 
  The library is callback driven: *onIntervalElapsed* is invoked every time the timer interval is elapsed, *onTemperatureChange* is invoked only when the temperature changes.
+ Both of them provide the temperature, a bool value which indicates wether the readout is valid and the sensor index from 0 to 14.
  
- ```
- void onIntervalElapsed(void(*callback)(float temperature, bool valid)) {
-		cb_onIntervalElapsed = callback;
-	}
- 
-	void onTemperatureChange(void(*callback)(float temperature, bool valid)) {
-		cb_onTemperatureChange = callback;
-	}
- ```
+```
+void onIntervalElapsed(void(*callback)(float temperature, bool valid, int deviceIndex)) {
+	cb_onIntervalElapsed = callback;
+}
+
+void onTemperatureChange(void(*callback)(float temperature, bool valid, int deviceIndex)) {
+	cb_onTemperatureChange = callback;
+}
+```
 
 # Prerequisites
 
@@ -57,7 +83,7 @@ NonBlockingDallas sensorDs18b20(dallasTemp);
 ### Step 3
 
 Initialize the sensor and set the callbacks.
-The parameters of the *begin* function are the **sensor resolution**, **unit of measure** (Celsius or Fahrenheit) and time interval in milliseconds.
+The parameters of the *begin* function are the **sensor resolution**, **unit of measure** (Celsius or Fahrenheit) and **time interval** in milliseconds.
 
 ```
 sensorDs18b20.begin(NonBlockingDallas::resolution_12, NonBlockingDallas::unit_C, 1500);
@@ -84,11 +110,11 @@ void loop() {
  sensorDs18b20.update();
 }
 
-void handleIntervalElapsed(float temperature, bool valid){
+void handleIntervalElapsed(float temperature, bool valid, int deviceIndex){
 
 }
 
-void handleTemperatureChange(float temperature, bool valid){
+void handleTemperatureChange(float temperature, bool valid, int deviceIndex){
 
 }
 ```

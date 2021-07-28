@@ -27,7 +27,8 @@
 #include <DallasTemperature.h>
 
 #define DEFAULT_INTERVAL 30000
-#define DEBUG_DS18B20
+#define ONE_WIRE_MAX_DEV 15			//Maximum number of devices on the One wire bus
+//#define DEBUG_DS18B20
 
 class NonBlockingDallas {
 
@@ -48,10 +49,10 @@ public:
 	NonBlockingDallas(DallasTemperature dallasTemp);
 	void begin(resolution res, unitsOfMeasure uom, unsigned long tempInterval);
 	void update();
-	void onIntervalElapsed(void(*callback)(float temperature, bool valid)) {
+	void onIntervalElapsed(void(*callback)(float temperature, bool valid, int deviceIndex)) {
 		cb_onIntervalElapsed = callback;
 	}
-	void onTemperatureChange(void(*callback)(float temperature, bool valid)) {
+	void onTemperatureChange(void(*callback)(float temperature, bool valid, int deviceIndex)) {
 		cb_onTemperatureChange = callback;
 	}
 
@@ -66,22 +67,22 @@ private:
 
 	DallasTemperature _dallasTemp;
 	sensorState _currentState;
+	uint8_t _sensorsCount;					//Number of sensors found on the bus
 	unsigned long _lastReadingMillis;		//Time at last temperature sensor readout
 	unsigned long _startConversionMillis;	//Time at start conversion of the sensor
 	unsigned long _conversionMillis;		//Sensor conversion time based on the resolution [milliseconds]
 
-	float _temperature;						//Last temperature value
-	bool _validReadout;						//Is the last temperature value valid?
 	unsigned long _tempInterval;			//Interval among each sensor reading [milliseconds]
 	unitsOfMeasure _unitsOM;				//Unit of measurement
-	DeviceAddress _sensorAddress;
+	float _temperatures[ONE_WIRE_MAX_DEV];	//Array of last temperature values
+	DeviceAddress _sensorAddresses[ONE_WIRE_MAX_DEV];
 
 	void waitNextReading();
 	void waitConversion();
-	void readSensor();
-	void readTemperature();
-	void(*cb_onIntervalElapsed)(float temperature, bool valid);
-	void(*cb_onTemperatureChange)(float temperature, bool valid);
+	void readSensors();
+	void readTemperatures(int deviceIndex);
+	void(*cb_onIntervalElapsed)(float temperature, bool valid, int deviceIndex);
+	void(*cb_onTemperatureChange)(float temperature, bool valid, int deviceIndex);
 };
 
 #endif

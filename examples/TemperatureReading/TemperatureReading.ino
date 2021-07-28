@@ -5,7 +5,8 @@
 //
 //  Description: this simple sketch demonstrates how to use the
 //               NonBlockingDallas libray for reading the DS18B20 sensor
-//               without blocking the main loop().
+//               without blocking the main loop(). Supports multiple
+//               sensors on the same ONE WIRE bus.
 //               https://github.com/Gbertaz/NonBlockingDallas
 //
 //
@@ -70,9 +71,11 @@ void loop() {
 }
 
 //Invoked at every sensor reading
-void handleIntervalElapsed(float temperature, bool valid){
+void handleIntervalElapsed(float temperature, bool valid, int deviceIndex){
 
-  Serial.print("Temperature: ");
+  Serial.print("Sensor ");
+  Serial.print(deviceIndex);
+  Serial.print(" temperature: ");
   Serial.print(temperature);
   Serial.println(" °C");
 
@@ -82,9 +85,11 @@ void handleIntervalElapsed(float temperature, bool valid){
 }
 
 //Invoked ONLY when the temperature changes
-void handleTemperatureChange(float temperature, bool valid){
+void handleTemperatureChange(float temperature, bool valid, int deviceIndex){
 
-  //Serial.print("Temperature changed: ");
+  //Serial.print("Sensor ");
+  //Serial.print(deviceIndex);
+  //Serial.print(" new temperature: ");
   //Serial.print(temperature);
   //Serial.println(" °C");
   
