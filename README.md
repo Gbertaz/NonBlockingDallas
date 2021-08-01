@@ -41,8 +41,8 @@ The conversion time depends upon the resolution of the sensor, thus the **time i
 
 # Callbacks
 
- The library is callback driven: *onIntervalElapsed* is invoked every time the timer interval is elapsed, *onTemperatureChange* is invoked only when the temperature changes.
- Both of them provide the temperature, a bool value which indicates wether the readout is valid and the sensor index from 0 to 14.
+The library is callback driven: *onIntervalElapsed* is invoked **every time** the timer interval is elapsed, *onTemperatureChange* is invoked **only when the temperature value changes** between two sensor readings.
+Both of them provide the temperature, a bool value which indicates wether the readout is valid and the sensor index from 0 to 14.
  
 ```
 void onIntervalElapsed(void(*callback)(float temperature, bool valid, int deviceIndex)) {
