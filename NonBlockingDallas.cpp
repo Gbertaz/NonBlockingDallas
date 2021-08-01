@@ -22,7 +22,7 @@
 
 #include "NonBlockingDallas.h"
 
-NonBlockingDallas::NonBlockingDallas(DallasTemperature dallasTemp){
+NonBlockingDallas::NonBlockingDallas(DallasTemperature *dallasTemp){
 	_dallasTemp = dallasTemp;
 	_sensorsCount = 0;
 	_lastReadingMillis = 0;
@@ -39,16 +39,16 @@ void NonBlockingDallas::begin(resolution res, unitsOfMeasure uom, unsigned long 
 	_unitsOM = uom;
 	_currentState = notFound;
 	_conversionMillis = 750 / (1 << (12 - (uint8_t)res));	//Rough calculation of sensors conversion time
-	_dallasTemp.begin();
+	_dallasTemp->begin();
 	delay(50);
-	_dallasTemp.setWaitForConversion(false);	//Avoid blocking the CPU waiting for the sensors conversion
-	_sensorsCount = _dallasTemp.getDeviceCount();
+	_dallasTemp->setWaitForConversion(false);	//Avoid blocking the CPU waiting for the sensors conversion
+	_sensorsCount = _dallasTemp->getDeviceCount();
 	
 	if(_sensorsCount > 0){
 		_currentState = waitingNextReading;
-		_dallasTemp.setResolution((uint8_t)res);
+		_dallasTemp->setResolution((uint8_t)res);
 		for(int i = 0; i < _sensorsCount; i++){
-			_dallasTemp.getAddress(_sensorAddresses[i], i);
+			_dallasTemp->getAddress(_sensorAddresses[i], i);
 		}
 	}
 
@@ -67,7 +67,7 @@ void NonBlockingDallas::begin(resolution res, unitsOfMeasure uom, unsigned long 
 		Serial.println(" sensors found on the bus");
 		if(_sensorsCount > 0){
 			Serial.print("DS18B20: parasite power is "); 
-			if (_dallasTemp.isParasitePowerMode()) Serial.print("ON");
+			if (_dallasTemp->isParasitePowerMode()) Serial.print("ON");
 			else Serial.print("OFF");
 		}
 		Serial.println("");
@@ -81,7 +81,7 @@ void NonBlockingDallas::begin(resolution res, unitsOfMeasure uom, unsigned long 
 void NonBlockingDallas::waitNextReading(){
 	if(_lastReadingMillis != 0 && (millis() - _lastReadingMillis < _tempInterval - _conversionMillis)) return;
 	_startConversionMillis = millis();
-	_dallasTemp.requestTemperatures();		//Requests a temperature conversion for all the sensors on the bus
+	_dallasTemp->requestTemperatures();		//Requests a temperature conversion for all the sensors on the bus
 	_currentState = waitingConversion;
 
 	#ifdef DEBUG_DS18B20
@@ -91,7 +91,7 @@ void NonBlockingDallas::waitNextReading(){
 }
 
 void NonBlockingDallas::waitConversion(){
-	if(_dallasTemp.isConversionComplete()){
+	if(_dallasTemp->isConversionComplete()){
 		//Save the actual sensor conversion time to precisely calculate the next reading time
 		_conversionMillis = millis() - _startConversionMillis;
 		_currentState = readingSensor;
@@ -121,10 +121,10 @@ void NonBlockingDallas::readTemperatures(int deviceIndex){
 	float temp = 0;
 	switch(_unitsOM){
 		case unit_C:
-			temp = _dallasTemp.getTempC(_sensorAddresses[deviceIndex]);
+			temp = _dallasTemp->getTempC(_sensorAddresses[deviceIndex]);
 		break;
 		case unit_F:
-			temp = _dallasTemp.getTempF(_sensorAddresses[deviceIndex]);
+			temp = _dallasTemp->getTempF(_sensorAddresses[deviceIndex]);
 		break;
 	}
 	bool validReadout = (temp != 85.0 && temp != (-127.0));

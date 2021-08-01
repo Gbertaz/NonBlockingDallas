@@ -44,7 +44,7 @@
 
 OneWire oneWire(ONE_WIRE_BUS);
 DallasTemperature dallasTemp(&oneWire);
-NonBlockingDallas sensorDs18b20(dallasTemp);    //Create a new instance of the NonBlockingDallas class
+NonBlockingDallas sensorDs18b20(&dallasTemp);    //Create a new instance of the NonBlockingDallas class
 
 void setup() {
   Serial.begin(9600);

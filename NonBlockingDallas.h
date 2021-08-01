@@ -46,7 +46,7 @@ public:
 		unit_F
 	};
 
-	NonBlockingDallas(DallasTemperature dallasTemp);
+	NonBlockingDallas(DallasTemperature *dallasTemp);
 	void begin(resolution res, unitsOfMeasure uom, unsigned long tempInterval);
 	void update();
 	void onIntervalElapsed(void(*callback)(float temperature, bool valid, int deviceIndex)) {
@@ -65,7 +65,7 @@ private:
 		readingSensor
 	};
 
-	DallasTemperature _dallasTemp;
+	DallasTemperature *_dallasTemp;
 	sensorState _currentState;
 	uint8_t _sensorsCount;					//Number of sensors found on the bus
 	unsigned long _lastReadingMillis;		//Time at last temperature sensor readout
