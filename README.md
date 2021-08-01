@@ -77,7 +77,7 @@ Create the instance of the classes:
 ```
 OneWire oneWire(ONE_WIRE_BUS);
 DallasTemperature dallasTemp(&oneWire);
-NonBlockingDallas sensorDs18b20(dallasTemp);
+NonBlockingDallas sensorDs18b20(&dallasTemp);
 ```
 
 ### Step 3
