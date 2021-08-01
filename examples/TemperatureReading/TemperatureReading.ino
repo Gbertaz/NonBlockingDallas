@@ -40,6 +40,7 @@
 #include <NonBlockingDallas.h>                  //Include the NonBlockingDallas library
 
 #define ONE_WIRE_BUS 2                          //PIN of the Maxim DS18B20 temperature sensor
+#define TIME_INTERVAL 1500                      //Time interval among sensor readings [milliseconds]
 
 OneWire oneWire(ONE_WIRE_BUS);
 DallasTemperature dallasTemp(&oneWire);
@@ -51,7 +52,7 @@ void setup() {
     ;
 
   //Initialize the sensor passing the resolution, unit of measure and reading interval [milliseconds]
-  sensorDs18b20.begin(NonBlockingDallas::resolution_12, NonBlockingDallas::unit_C, 1500);
+  sensorDs18b20.begin(NonBlockingDallas::resolution_12, NonBlockingDallas::unit_C, TIME_INTERVAL);
 
   //Callbacks
   sensorDs18b20.onIntervalElapsed(handleIntervalElapsed);
@@ -70,7 +71,7 @@ void loop() {
    */ 
 }
 
-//Invoked at every sensor reading
+//Invoked at every sensor reading (TIME_INTERVAL milliseconds)
 void handleIntervalElapsed(float temperature, bool valid, int deviceIndex){
 
   Serial.print("Sensor ");
@@ -84,7 +85,7 @@ void handleIntervalElapsed(float temperature, bool valid, int deviceIndex){
    */
 }
 
-//Invoked ONLY when the temperature changes
+//Invoked ONLY when the temperature changes between two sensor readings
 void handleTemperatureChange(float temperature, bool valid, int deviceIndex){
 
   //Serial.print("Sensor ");
