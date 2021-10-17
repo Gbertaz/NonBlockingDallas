@@ -15,6 +15,7 @@ unitsOfMeasure	KEYWORD1
 
 begin	KEYWORD2
 update	KEYWORD2
+requestTemperature	KEYWORD2
 onIntervalElapsed	KEYWORD2
 onTemperatureChange	KEYWORD2
 

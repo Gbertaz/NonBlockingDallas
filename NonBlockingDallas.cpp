@@ -80,14 +80,7 @@ void NonBlockingDallas::begin(resolution res, unitsOfMeasure uom, unsigned long 
 
 void NonBlockingDallas::waitNextReading(){
 	if(_lastReadingMillis != 0 && (millis() - _lastReadingMillis < _tempInterval - _conversionMillis)) return;
-	_startConversionMillis = millis();
-	_dallasTemp->requestTemperatures();		//Requests a temperature conversion for all the sensors on the bus
-	_currentState = waitingConversion;
-
-	#ifdef DEBUG_DS18B20
-		Serial.print("DS18B20: requested new reading");
-		Serial.println("");
-	#endif
+	requestTemperature();
 }
 
 void NonBlockingDallas::waitConversion(){
@@ -155,4 +148,15 @@ void NonBlockingDallas::update(){
 			readSensors();
 		break;
 	}
+}
+
+void NonBlockingDallas::requestTemperature(){
+	_currentState = waitingConversion;
+	_startConversionMillis = millis();
+	_dallasTemp->requestTemperatures();		//Requests a temperature conversion for all the sensors on the bus
+	
+	#ifdef DEBUG_DS18B20
+		Serial.print("DS18B20: requested new reading");
+		Serial.println("");
+	#endif
 }

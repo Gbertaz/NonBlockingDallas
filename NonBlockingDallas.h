@@ -49,6 +49,7 @@ public:
 	NonBlockingDallas(DallasTemperature *dallasTemp);
 	void begin(resolution res, unitsOfMeasure uom, unsigned long tempInterval);
 	void update();
+	void requestTemperature();
 	void onIntervalElapsed(void(*callback)(float temperature, bool valid, int deviceIndex)) {
 		cb_onIntervalElapsed = callback;
 	}
