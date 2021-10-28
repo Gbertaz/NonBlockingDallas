@@ -58,8 +58,7 @@ void setup() {
   sensorDs18b20.onIntervalElapsed(handleIntervalElapsed);
   sensorDs18b20.onTemperatureChange(handleTemperatureChange);
 
-  //Call the following function if you want to request the temperature without waiting for TIME_INTERVAL to elapse
-  //The temperature value will then be provided with the onTemperatureChange callback when ready
+  //Call the following function whenever you want to request a new temperature reading without waiting for TIME_INTERVAL to elapse
   sensorDs18b20.requestTemperature();
 }
 
