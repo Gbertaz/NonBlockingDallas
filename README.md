@@ -6,7 +6,7 @@ While the conversion is in progress, the main loop() continues to run so that th
 
 # Features
 
-Supports up to 15 sensors on the same ONE WIRE bus. To get some debug information, simply remove the comment on following line in *NonBlockingDallash.h*:
+Supports up to 15 sensors on the same ONE WIRE bus. To get some debug information, simply remove the comment on following line in *NonBlockingDallas.h*:
 
 ```
 #define DEBUG_DS18B20
@@ -33,7 +33,7 @@ DS18B20 (2): 29.26 °C
 
 The conversion time depends upon the resolution of the sensor, thus the **time interval** parameter passed to the *begin* function must be greater than or equal to the conversion time.
 
-| Resolution  | Convertion time |
+| Resolution  | Conversion time |
 | ------------- | ------------- |
 | 9 bit  | 93 ms  |
 | 10 bit  | 187 ms  |
