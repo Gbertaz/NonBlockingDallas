@@ -12,7 +12,7 @@ The library is available from the Arduino Library Manager: load the Arduino IDE,
 
 ## Manual installation
 
-Clone the project in your Arduino libraries folder and include the library usind the following line:
+Clone the project in your Arduino libraries folder and include the library using the following line:
 
 ```
 #include <NonBlockingDallas.h>
