@@ -4,6 +4,21 @@ This simple library for Arduino implements a machine state for reading the **Max
 
 While the conversion is in progress, the main loop() continues to run so that the sketch can execute other tasks. When the temperature reading is ready, a callback is invoked. At full resolution the conversion time takes up to 750 milliseconds, a huge amount of time, thus the importance of the library to avoid blocking the sketch execution.
 
+# Installation
+
+## Using the Arduino Library Manager
+
+The library is available from the Arduino Library Manager: load the Arduino IDE, then use the menu at the top to select Sketch -> Include Library -> Manage Libraries. Type **NonBlockingDallas** in the search box.
+
+## Manual installation
+
+Clone the project in your Arduino libraries folder and include the library usind the following line:
+
+```
+#include <NonBlockingDallas.h>
+```
+
+
 # Features
 
 Supports up to 15 sensors on the same ONE WIRE bus. To get some debug information, simply remove the comment on following line in *NonBlockingDallas.h*:
