@@ -1,3 +1,7 @@
+[![arduino-library-badge](https://www.ardu-badge.com/badge/NonBlockingDallas.svg?)](https://www.ardu-badge.com/NonBlockingDallas)
+
+
+
 # Non blocking temperature sensor library for Arduino
 
 This simple library for Arduino implements a machine state for reading the **Maxim Integrated DS18B20 temperature sensor** without blocking the main loop() of the sketch. It is designed for a **continuos sensor reading** every amount of time configurable by the developer. It is also possible to request a new sensor reading on the fly by calling the *requestTemperature()* function.  
@@ -63,24 +67,18 @@ This library uses OneWire and DallasTemperature libraries, so you will need to h
 
 # Installation
 
-## Using the Arduino Library Manager
-
 The library is available from the Arduino Library Manager: load the Arduino IDE, then use the menu at the top to select Sketch -> Include Library -> Manage Libraries. Type **NonBlockingDallas** in the search box.
 
-## Manual installation
+Click the following badge for a complete installation guide
 
-Clone the project in your Arduino libraries folder and include the library using the following line:
-
-```
-#include <NonBlockingDallas.h>
-```
+[![arduino-library-badge](https://www.ardu-badge.com/badge/NonBlockingDallas.svg?)](https://www.ardu-badge.com/NonBlockingDallas)
 
 
 # Usage
 
 ### Step 1
 
-Include the required libreries:
+Include the required libraries:
 
 ```
 #include <OneWire.h>
