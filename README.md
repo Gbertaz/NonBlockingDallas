@@ -4,21 +4,6 @@ This simple library for Arduino implements a machine state for reading the **Max
 
 While the conversion is in progress, the main loop() continues to run so that the sketch can execute other tasks. When the temperature reading is ready, a callback is invoked. At full resolution the conversion time takes up to 750 milliseconds, a huge amount of time, thus the importance of the library to avoid blocking the sketch execution.
 
-# Installation
-
-## Using the Arduino Library Manager
-
-The library is available from the Arduino Library Manager: load the Arduino IDE, then use the menu at the top to select Sketch -> Include Library -> Manage Libraries. Type **NonBlockingDallas** in the search box.
-
-## Manual installation
-
-Clone the project in your Arduino libraries folder and include the library using the following line:
-
-```
-#include <NonBlockingDallas.h>
-```
-
-
 # Features
 
 Supports up to 15 sensors on the same ONE WIRE bus. To get some debug information, simply remove the comment on following line in *NonBlockingDallas.h*:
@@ -43,19 +28,7 @@ DS18B20 (2): 29.26 °C
 ...
 ```
 
-
-# Sensor Resolution
-
-The conversion time depends upon the resolution of the sensor, thus the **time interval** parameter passed to the *begin* function must be greater than or equal to the conversion time.
-
-| Resolution  | Conversion time |
-| ------------- | ------------- |
-| 9 bit  | 93 ms  |
-| 10 bit  | 187 ms  |
-| 11 bit  | 375 ms  |
-| 12 bit  | 750 ms  |
-
-# Callbacks
+### Callbacks
 
 The library is callback driven: *onIntervalElapsed* is invoked **every time** the timer interval is elapsed, *onTemperatureChange* is invoked **only when the temperature value changes** between two sensor readings.
 Both of them provide the temperature, a bool value which indicates wether the readout is valid and the sensor index from 0 to 14.
@@ -70,9 +43,38 @@ void onTemperatureChange(void(*callback)(float temperature, bool valid, int devi
 }
 ```
 
+
+# Sensor Resolution
+
+The conversion time of the DS18B20 temperature sensor depends on its resolution, thus the **time interval** parameter passed to the *begin* function must be greater than or equal to the conversion time.
+
+| Resolution  | Conversion time |
+| ------------- | ------------- |
+| 9 bit  | 93 ms  |
+| 10 bit  | 187 ms  |
+| 11 bit  | 375 ms  |
+| 12 bit  | 750 ms  |
+
+
 # Prerequisites
 
 This library uses OneWire and DallasTemperature libraries, so you will need to have those installed.
+
+
+# Installation
+
+## Using the Arduino Library Manager
+
+The library is available from the Arduino Library Manager: load the Arduino IDE, then use the menu at the top to select Sketch -> Include Library -> Manage Libraries. Type **NonBlockingDallas** in the search box.
+
+## Manual installation
+
+Clone the project in your Arduino libraries folder and include the library using the following line:
+
+```
+#include <NonBlockingDallas.h>
+```
+
 
 # Usage
 
