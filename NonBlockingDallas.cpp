@@ -112,15 +112,17 @@ void NonBlockingDallas::readSensors(){
 
 void NonBlockingDallas::readTemperatures(int deviceIndex){
 	float temp = 0;
+	bool validReadout;
 	switch(_unitsOM){
 		case unit_C:
 			temp = _dallasTemp->getTempC(_sensorAddresses[deviceIndex]);
+			validReadout = ( temp != DEVICE_DISCONNECTED_C); //-127.0
 		break;
 		case unit_F:
 			temp = _dallasTemp->getTempF(_sensorAddresses[deviceIndex]);
+			validReadout = (temp != DEVICE_DISCONNECTED_F); //-196.6
 		break;
 	}
-	bool validReadout = (temp != 85.0 && temp != (-127.0));
 	if(cb_onIntervalElapsed)(*cb_onIntervalElapsed)(temp, validReadout, deviceIndex);
 
 	if(_temperatures[deviceIndex] != temp){
