@@ -160,6 +160,16 @@ void NonBlockingDallas::update(){
 }
 
 void NonBlockingDallas::requestTemperature(){
+	_sensorsCount = _dallasTemp->getDeviceCount();
+	if(_sensorsCount < 1) {
+		#ifdef DEBUG_DS18B20
+			Serial.print("DS18B20: no sensors found on the bus");
+			Serial.println("");
+		#endif
+		
+		return;
+	}
+
 	_currentState = waitingConversion;
 	_startConversionMillis = millis();
 	_dallasTemp->requestTemperatures();		//Requests a temperature conversion for all the sensors on the bus
