@@ -57,7 +57,8 @@ void setup() {
   //Callbacks
   sensorDs18b20.onIntervalElapsed(handleIntervalElapsed);
   sensorDs18b20.onTemperatureChange(handleTemperatureChange);
-
+  sensorDs18b20.onDeviceDisconnected(handleDeviceDisconnected);
+  
   //Call the following function whenever you want to request a new temperature reading without waiting for TIME_INTERVAL to elapse
   sensorDs18b20.requestTemperature();
 }
@@ -74,7 +75,7 @@ void loop() {
    */ 
 }
 
-//Invoked at every sensor reading (TIME_INTERVAL milliseconds)
+//Invoked at every VALID sensor reading. "valid" parameter will be removed in a feature version
 void handleIntervalElapsed(float temperature, bool valid, int deviceIndex){
 
   Serial.print("Sensor ");
@@ -88,7 +89,7 @@ void handleIntervalElapsed(float temperature, bool valid, int deviceIndex){
    */
 }
 
-//Invoked ONLY when the temperature changes between two sensor readings
+//Invoked ONLY when the temperature changes between two VALID sensor readings. "valid" parameter will be removed in a feature version
 void handleTemperatureChange(float temperature, bool valid, int deviceIndex){
 
   //Serial.print("Sensor ");
@@ -100,4 +101,11 @@ void handleTemperatureChange(float temperature, bool valid, int deviceIndex){
   /*
    *  DO SOME AMAZING STUFF WITH THE TEMPERATURE
    */
+}
+
+//Invoked when the sensor reading fails
+void handleDeviceDisconnected(int deviceIndex){
+  Serial.print("Sensor ");
+  Serial.print(deviceIndex);
+  Serial.println(" disconnected.");
 }

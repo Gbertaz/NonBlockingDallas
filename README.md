@@ -34,9 +34,14 @@ DS18B20 (2): 29.26 °C
 
 ### Callbacks
 
-The library is callback driven: *onIntervalElapsed* is invoked **every time** the timer interval is elapsed, *onTemperatureChange* is invoked **only when the temperature value changes** between two sensor readings.
-Both of them provide the temperature, a bool value which indicates wether the readout is valid and the sensor index from 0 to 14.
- 
+The library is callback driven:
+- *onIntervalElapsed* invoked **every time** the timer interval is elapsed and the sensor reading is **valid**
+- *onTemperatureChange* invoked **only when the temperature value changes** between two **valid** readings of the same sensor
+- *onDeviceDisconnected* invoked when the device is disconnected
+
+In the latest version of the library I have introduced *onDeviceDisconnected* which makes the *valid* parameter meaningless. In order to maintain retro compatibility, it will always be *true*. It will be removed in a feature version.
+*deviceIndex* represents the index of the sensor on the bus, values are from 0 to 14.
+
 ```
 void onIntervalElapsed(void(*callback)(float temperature, bool valid, int deviceIndex)) {
 	cb_onIntervalElapsed = callback;
@@ -44,6 +49,10 @@ void onIntervalElapsed(void(*callback)(float temperature, bool valid, int device
 
 void onTemperatureChange(void(*callback)(float temperature, bool valid, int deviceIndex)) {
 	cb_onTemperatureChange = callback;
+}
+
+void onDeviceDisconnected(void(*callback)(int deviceIndex)) {
+	cb_onDeviceDisconnected = callback;
 }
 ```
 
@@ -103,6 +112,9 @@ The parameters of the *begin* function are the **sensor resolution**, **unit of 
 
 ```
 sensorDs18b20.begin(NonBlockingDallas::resolution_12, NonBlockingDallas::unit_C, 1500);
+sensorDs18b20.onIntervalElapsed(handleIntervalElapsed);
+sensorDs18b20.onTemperatureChange(handleTemperatureChange);
+sensorDs18b20.onDeviceDisconnected(handleDeviceDisconnected);
 ```
 
 Possible values are:
@@ -132,6 +144,10 @@ void handleIntervalElapsed(float temperature, bool valid, int deviceIndex){
 
 void handleTemperatureChange(float temperature, bool valid, int deviceIndex){
 
+}
+
+void handleDeviceDisconnected(int deviceIndex){
+  
 }
 ```
 

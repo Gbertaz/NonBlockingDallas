@@ -94,16 +94,6 @@ void NonBlockingDallas::waitConversion(){
 void NonBlockingDallas::readSensors(){
 	for(int i = 0; i < _sensorsCount; i++){
 		readTemperatures(i);
-
-		#ifdef DEBUG_DS18B20
-			Serial.print("DS18B20 (");
-			Serial.print(i);
-			Serial.print("): ");
-			Serial.print(_temperatures[i]);
-			if(_unitsOM == unit_C) Serial.print(" °C");
-			else Serial.print(" °F");
-			Serial.println("");
-		#endif
 	}
 
 	_lastReadingMillis = millis();
@@ -112,23 +102,40 @@ void NonBlockingDallas::readSensors(){
 
 void NonBlockingDallas::readTemperatures(int deviceIndex){
 	float temp = 0;
-	bool validReadout;
+	int32_t rawTemp = _dallasTemp->getTemp(_sensorAddresses[deviceIndex]);
+
+	if(rawTemp == DEVICE_DISCONNECTED_RAW){
+		if(cb_onDeviceDisconnected)(*cb_onDeviceDisconnected)(deviceIndex);
+		return;
+	}
+
 	switch(_unitsOM){
 		case unit_C:
-			temp = _dallasTemp->getTempC(_sensorAddresses[deviceIndex]);
-			validReadout = ( temp != DEVICE_DISCONNECTED_C); //-127.0
+			temp = (float) rawTemp * 0.0078125f;
 		break;
 		case unit_F:
-			temp = _dallasTemp->getTempF(_sensorAddresses[deviceIndex]);
-			validReadout = (temp != DEVICE_DISCONNECTED_F); //-196.6
+			temp = ((float) rawTemp * 0.0140625f) + 32.0f;
 		break;
 	}
-	if(cb_onIntervalElapsed)(*cb_onIntervalElapsed)(temp, validReadout, deviceIndex);
 
-	if(_temperatures[deviceIndex] != temp){
-		_temperatures[deviceIndex] = temp;
-		if(cb_onTemperatureChange)(*cb_onTemperatureChange)(temp, validReadout, deviceIndex);
+	//Invoked only if reading is valid. "valid" parameter will be removed in a feature version
+	if(cb_onIntervalElapsed)(*cb_onIntervalElapsed)(temp, true, deviceIndex);
+
+	if(_temperatures[deviceIndex] != rawTemp){
+		_temperatures[deviceIndex] = rawTemp;
+		//Invoked only if reading is valid. "valid" parameter will be removed in a feature version
+		if(cb_onTemperatureChange)(*cb_onTemperatureChange)(temp, true, deviceIndex);
 	}
+
+	#ifdef DEBUG_DS18B20
+		Serial.print("DS18B20 (");
+		Serial.print(deviceIndex);
+		Serial.print("): ");
+		Serial.print(temp);
+		if(_unitsOM == unit_C) Serial.print(" °C");
+		else Serial.print(" °F");
+		Serial.println("");
+	#endif
 }
 
 //==============================================================================================
