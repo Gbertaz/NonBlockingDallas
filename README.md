@@ -35,9 +35,9 @@ DS18B20 (2): 29.26 °C
 ### Callbacks
 
 The library is callback driven:
-- *onIntervalElapsed* invoked **every time** the timer interval is elapsed and the sensor reading is valid
+- *onIntervalElapsed* invoked **every time** the timer interval is elapsed and the sensor reading is **valid**
 - *onTemperatureChange* invoked **only when the temperature value changes** between two **valid** readings of the same sensor
-- *onDeviceDisconnected* invoked when the device is disconnected and reading is not valid
+- *onDeviceDisconnected* invoked when the device is disconnected
 
 In the latest version of the library I have introduced *onDeviceDisconnected* which makes the *valid* parameter meaningless. In order to maintain retro compatibility, it will always be *true*. It will be removed in a feature version.
 *deviceIndex* represents the index of the sensor on the bus, values are from 0 to 14.
