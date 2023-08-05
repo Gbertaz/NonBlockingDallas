@@ -18,6 +18,7 @@ update	KEYWORD2
 requestTemperature	KEYWORD2
 onIntervalElapsed	KEYWORD2
 onTemperatureChange	KEYWORD2
+onDeviceDisconnected	KEYWORD2
 
 #######################################
 # Constants (LITERAL1)
