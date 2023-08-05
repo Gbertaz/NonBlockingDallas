@@ -50,6 +50,7 @@ public:
 	void begin(resolution res, unitsOfMeasure uom, unsigned long tempInterval);
 	void update();
 	void requestTemperature();
+	void setUnitOfMeasure(unitsOfMeasure uom) { _unitsOM = uom; }
 	void onIntervalElapsed(void(*callback)(float temperature, bool valid, int deviceIndex)) {
 		cb_onIntervalElapsed = callback;
 	}
