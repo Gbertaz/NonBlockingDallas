@@ -87,8 +87,8 @@ private:
 	void readSensors();
 	void readTemperatures(int deviceIndex);
 	void(*cb_onDeviceDisconnected)(int deviceIndex);
-	void(*cb_onIntervalElapsed)(float temperature, bool valid, int deviceIndex);	//Invoked only if reading is valid. "valid" parameter will be removed in a feature version
-	void(*cb_onTemperatureChange)(float temperature, bool valid, int deviceIndex);	//Invoked only if reading is valid. "valid" parameter will be removed in a feature version
+	void(*cb_onIntervalElapsed)(float temperature, bool valid, int deviceIndex);	//Invoked only if reading is valid. "valid" parameter will be removed in a future version
+	void(*cb_onTemperatureChange)(float temperature, bool valid, int deviceIndex);	//Invoked only if reading is valid. "valid" parameter will be removed in a future version
 };
 
 #endif

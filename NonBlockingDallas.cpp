@@ -118,12 +118,12 @@ void NonBlockingDallas::readTemperatures(int deviceIndex){
 		break;
 	}
 
-	//Invoked only if reading is valid. "valid" parameter will be removed in a feature version
+	//Invoked only if reading is valid. "valid" parameter will be removed in a future version
 	if(cb_onIntervalElapsed)(*cb_onIntervalElapsed)(temp, true, deviceIndex);
 
 	if(_temperatures[deviceIndex] != rawTemp){
 		_temperatures[deviceIndex] = rawTemp;
-		//Invoked only if reading is valid. "valid" parameter will be removed in a feature version
+		//Invoked only if reading is valid. "valid" parameter will be removed in a future version
 		if(cb_onTemperatureChange)(*cb_onTemperatureChange)(temp, true, deviceIndex);
 	}
 

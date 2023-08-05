@@ -39,7 +39,7 @@ The library is callback driven:
 - *onTemperatureChange* invoked **only when the temperature value changes** between two **valid** readings of the same sensor
 - *onDeviceDisconnected* invoked when the device is disconnected
 
-In the latest version of the library I have introduced *onDeviceDisconnected* which makes the *valid* parameter meaningless. In order to maintain retro compatibility, it will always be *true*. It will be removed in a feature version.
+In the latest version of the library I have introduced *onDeviceDisconnected* which makes the *valid* parameter meaningless. In order to maintain retro compatibility, it will always be *true*. It will be removed in a future version.
 *deviceIndex* represents the index of the sensor on the bus, values are from 0 to 14.
 
 ```

@@ -19,6 +19,7 @@ requestTemperature	KEYWORD2
 onIntervalElapsed	KEYWORD2
 onTemperatureChange	KEYWORD2
 onDeviceDisconnected	KEYWORD2
+setUnitOfMeasure	KEYWORD2
 
 #######################################
 # Constants (LITERAL1)
