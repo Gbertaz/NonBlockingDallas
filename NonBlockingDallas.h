@@ -56,6 +56,9 @@ public:
 	void onTemperatureChange(void(*callback)(float temperature, bool valid, int deviceIndex)) {
 		cb_onTemperatureChange = callback;
 	}
+	void onDeviceDisconnected(void(*callback)(int deviceIndex)) {
+		cb_onDeviceDisconnected = callback;
+	}
 
 private:
 
@@ -68,22 +71,23 @@ private:
 
 	DallasTemperature *_dallasTemp;
 	sensorState _currentState;
-	uint8_t _sensorsCount;					//Number of sensors found on the bus
-	unsigned long _lastReadingMillis;		//Time at last temperature sensor readout
-	unsigned long _startConversionMillis;	//Time at start conversion of the sensor
-	unsigned long _conversionMillis;		//Sensor conversion time based on the resolution [milliseconds]
+	uint8_t _sensorsCount;						//Number of sensors found on the bus
+	unsigned long _lastReadingMillis;			//Time at last temperature sensor readout
+	unsigned long _startConversionMillis;		//Time at start conversion of the sensor
+	unsigned long _conversionMillis;			//Sensor conversion time based on the resolution [milliseconds]
 
-	unsigned long _tempInterval;			//Interval among each sensor reading [milliseconds]
-	unitsOfMeasure _unitsOM;				//Unit of measurement
-	float _temperatures[ONE_WIRE_MAX_DEV];	//Array of last temperature values
+	unsigned long _tempInterval;				//Interval among each sensor reading [milliseconds]
+	unitsOfMeasure _unitsOM;					//Unit of measurement
+	int32_t _temperatures[ONE_WIRE_MAX_DEV];	//Array of last valid temperature raw values
 	DeviceAddress _sensorAddresses[ONE_WIRE_MAX_DEV];
 
 	void waitNextReading();
 	void waitConversion();
 	void readSensors();
 	void readTemperatures(int deviceIndex);
-	void(*cb_onIntervalElapsed)(float temperature, bool valid, int deviceIndex);
-	void(*cb_onTemperatureChange)(float temperature, bool valid, int deviceIndex);
+	void(*cb_onDeviceDisconnected)(int deviceIndex);
+	void(*cb_onIntervalElapsed)(float temperature, bool valid, int deviceIndex);	//Invoked only if reading is valid. "valid" parameter will be removed in a feature version
+	void(*cb_onTemperatureChange)(float temperature, bool valid, int deviceIndex);	//Invoked only if reading is valid. "valid" parameter will be removed in a feature version
 };
 
 #endif
