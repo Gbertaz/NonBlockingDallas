@@ -4,13 +4,106 @@
 
 # Non blocking temperature sensor library for Arduino
 
-This simple library for Arduino implements a machine state for reading the **Maxim Integrated DS18B20 temperature sensor** without blocking the main loop() of the sketch. It is designed for a **continuos sensor reading** every amount of time configurable by the developer. It is also possible to request a new sensor reading on the fly by calling the *requestTemperature()* function.  
+This simple library for Arduino implements a machine state for reading the **Maxim Integrated DS18B20 temperature sensor** without blocking the main loop() of the sketch. It is designed for a **continuous sensor reading** every amount of time configurable by the developer. It is also possible to request a new sensor reading on the fly by calling the *requestTemperature()* function.  
 
 While the conversion is in progress, the main loop() continues to run so that the sketch can execute other tasks. When the temperature reading is ready, a callback is invoked. At full resolution the conversion time takes up to 750 milliseconds, a huge amount of time, thus the importance of the library to avoid blocking the sketch execution.
 
-# Features
+Supports up to 15 sensors on the same ONE WIRE bus. 
 
-Supports up to 15 sensors on the same ONE WIRE bus. To get some debug information, simply remove the comment on following line in *NonBlockingDallas.h*:
+# Installation
+
+## Arduino
+
+### Prerequisites
+This library uses OneWire and DallasTemperature libraries, so you will need to have those installed.
+
+### Include library
+The library is available from the Arduino Library Manager: load the Arduino IDE, then use the menu at the top to select Sketch -> Include Library -> Manage Libraries. Type **NonBlockingDallas** in the search box.
+
+Click the following badge for a complete installation guide
+
+[![arduino-library-badge](https://www.ardu-badge.com/badge/NonBlockingDallas.svg?)](https://www.ardu-badge.com/NonBlockingDallas)
+
+## PlatformIO
+
+[See install documentation](https://registry.platformio.org/libraries/gbertaz/NonBlockingDallas/installation)
+
+# Usage
+
+## Step 1
+
+Include the required libraries:
+
+```
+#include <OneWire.h>
+#include <DallasTemperature.h>
+#include <NonBlockingDallas.h>
+```
+
+## Step 2
+
+Create the instance of the classes:
+
+```
+OneWire oneWire(ONE_WIRE_BUS);
+DallasTemperature dallasTemp(&oneWire);
+NonBlockingDallas sensorDs18b20(&dallasTemp);
+```
+
+## Step 3
+
+Initialize the sensor and set the callbacks.
+The parameters of the *begin* function are the **sensor resolution**, **unit of measure** (Celsius or Fahrenheit) and **time interval** in milliseconds.
+
+```
+sensorDs18b20.begin(NonBlockingDallas::resolution_12, 1500);
+sensorDs18b20.onIntervalElapsed(handleIntervalElapsed);
+sensorDs18b20.onTemperatureChange(handleTemperatureChange);
+sensorDs18b20.onDeviceDisconnected(handleDeviceDisconnected);
+```
+
+### Sensors resolution
+The conversion time of the DS18B20 temperature sensor depends on its resolution, thus the **time interval** parameter passed to the *begin* function must be greater than or equal to the conversion time.
+
+|     enum      | Resolution  | Conversion time |
+| ------------- | ----------- | --------------- |
+| resolution_9  |       9 bit |           93 ms |
+| resolution_10 |      10 bit |          187 ms |
+| resolution_11 |      11 bit |          375 ms |
+| resolution_12 |      12 bit |          750 ms |
+
+
+## Step 4
+
+Implement the callbacks' functions and call the *update* function inside the main loop()  
+
+```
+
+void loop() {
+ sensorDs18b20.update();
+}
+
+void handleIntervalElapsed(int deviceIndex, int32_t temperatureRAW){
+
+}
+
+void handleTemperatureChange(int deviceIndex, int32_t temperatureRAW){
+	// If needed, call on the fly conversion
+	float tC = rawToCelsius(temperatureRAW);
+	float tF = rawToFahrenheit(temperatureRAW);
+}
+
+void handleDeviceDisconnected(int deviceIndex){
+  
+}
+```
+
+### Example
+
+Please see the [Example](https://github.com/Gbertaz/NonBlockingDallas/blob/master/examples/TemperatureReading/TemperatureReading.ino) for a complete working sketch
+
+# Debug
+To get some debug information, simply remove the comment on following line in *NonBlockingDallas.h*:
 
 ```
 #define DEBUG_DS18B20
@@ -32,7 +125,7 @@ DS18B20 (2): 29.26 °C
 ...
 ```
 
-### Callbacks
+# Callbacks
 
 The library is callback driven:
 - *onIntervalElapsed* invoked **every time** the timer interval is elapsed and the sensor reading is **valid**
@@ -43,11 +136,11 @@ In the latest version of the library I have introduced *onDeviceDisconnected* wh
 *deviceIndex* represents the index of the sensor on the bus, values are from 0 to 14.
 
 ```
-void onIntervalElapsed(void(*callback)(float temperature, bool valid, int deviceIndex)) {
+void onIntervalElapsed(void(*callback)(int deviceIndex, int32_t temperatureRAW)) {
 	cb_onIntervalElapsed = callback;
 }
 
-void onTemperatureChange(void(*callback)(float temperature, bool valid, int deviceIndex)) {
+void onTemperatureChange(void(*callback)(int deviceIndex, int32_t temperatureRAW)) {
 	cb_onTemperatureChange = callback;
 }
 
@@ -56,101 +149,3 @@ void onDeviceDisconnected(void(*callback)(int deviceIndex)) {
 }
 ```
 
-
-# Sensor Resolution
-
-The conversion time of the DS18B20 temperature sensor depends on its resolution, thus the **time interval** parameter passed to the *begin* function must be greater than or equal to the conversion time.
-
-| Resolution  | Conversion time |
-| ------------- | ------------- |
-| 9 bit  | 93 ms  |
-| 10 bit  | 187 ms  |
-| 11 bit  | 375 ms  |
-| 12 bit  | 750 ms  |
-
-
-# Prerequisites
-
-This library uses OneWire and DallasTemperature libraries, so you will need to have those installed.
-
-
-# Installation
-
-The library is available from the Arduino Library Manager: load the Arduino IDE, then use the menu at the top to select Sketch -> Include Library -> Manage Libraries. Type **NonBlockingDallas** in the search box.
-
-Click the following badge for a complete installation guide
-
-[![arduino-library-badge](https://www.ardu-badge.com/badge/NonBlockingDallas.svg?)](https://www.ardu-badge.com/NonBlockingDallas)
-
-
-# Usage
-
-### Step 1
-
-Include the required libraries:
-
-```
-#include <OneWire.h>
-#include <DallasTemperature.h>
-#include <NonBlockingDallas.h>
-```
-
-### Step 2
-
-Create the instance of the classes:
-
-```
-OneWire oneWire(ONE_WIRE_BUS);
-DallasTemperature dallasTemp(&oneWire);
-NonBlockingDallas sensorDs18b20(&dallasTemp);
-```
-
-### Step 3
-
-Initialize the sensor and set the callbacks.
-The parameters of the *begin* function are the **sensor resolution**, **unit of measure** (Celsius or Fahrenheit) and **time interval** in milliseconds.
-
-```
-sensorDs18b20.begin(NonBlockingDallas::resolution_12, NonBlockingDallas::unit_C, 1500);
-sensorDs18b20.onIntervalElapsed(handleIntervalElapsed);
-sensorDs18b20.onTemperatureChange(handleTemperatureChange);
-sensorDs18b20.onDeviceDisconnected(handleDeviceDisconnected);
-```
-
-Possible values are:
-
-* resolution_9
-* resolution_10
-* resolution_11
-* resolution_12
-
-* unit_C for degrees Celsius
-* unit_F for Fahrenheit
-
-
-### Step 4
-
-Implement the callbacks' functions and call the *update* function inside the main loop()  
-
-```
-
-void loop() {
- sensorDs18b20.update();
-}
-
-void handleIntervalElapsed(float temperature, bool valid, int deviceIndex){
-
-}
-
-void handleTemperatureChange(float temperature, bool valid, int deviceIndex){
-
-}
-
-void handleDeviceDisconnected(int deviceIndex){
-  
-}
-```
-
-***
-
-Please see the [Example](https://github.com/Gbertaz/NonBlockingDallas/blob/master/examples/TemperatureReading/TemperatureReading.ino) for a complete working sketch
