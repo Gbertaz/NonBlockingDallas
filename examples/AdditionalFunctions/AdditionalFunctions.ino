@@ -1,7 +1,7 @@
 /**
- * @brief Test additionals functions for lib NonBlockingDallas
+ * @brief Usage/Test of additional functions for lib NonBlockingDallas
  * 
- * @author oOpen
+ * @author oOpen <git@logisciel.com>
  * 
  * License: MIT
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -32,7 +32,7 @@
 
 OneWire oneWire(ONE_WIRE_BUS);
 DallasTemperature dallasTemp(&oneWire);
-NonBlockingDallas sensorDs18b20(&dallasTemp);
+NonBlockingDallas temperatureSensors(&dallasTemp);
 
 bool oneTimeFnCalled = false;
 
@@ -43,9 +43,9 @@ void handleTemperatureChange(int deviceIndex, int32_t temperatureRAW)
   Serial.print(F(" | RAW="));
   Serial.print(temperatureRAW);
   Serial.print(F(" | "));
-  Serial.print(sensorDs18b20.rawToCelsius(temperatureRAW));
+  Serial.print(temperatureSensors.rawToCelsius(temperatureRAW));
   Serial.print(F("°C | "));
-  Serial.print(sensorDs18b20.rawToFahrenheit(temperatureRAW));
+  Serial.print(temperatureSensors.rawToFahrenheit(temperatureRAW));
   Serial.println(F("°F"));
 }
 
@@ -54,14 +54,14 @@ void setup() {
   while (!Serial)
     ;
 
-  sensorDs18b20.begin(NonBlockingDallas::resolution_12, TIME_INTERVAL);
-  sensorDs18b20.onTemperatureChange(handleTemperatureChange);
-  //sensorDs18b20.requestTemperature();
+  temperatureSensors.begin(NonBlockingDallas::resolution_12, TIME_INTERVAL);
+  temperatureSensors.onTemperatureChange(handleTemperatureChange);
+  //temperatureSensors.requestTemperature();
 }
 
 void loop()
 {
- sensorDs18b20.update();
+ temperatureSensors.update();
 
  // only call one time this function after tow seconds
  if(oneTimeFnCalled == false && millis() > 2000) {
@@ -73,52 +73,52 @@ void loop()
 void testAdditionalsFunctions()
 {
   Serial.print(F("[NonBlockingDallas] : getDeviceCount() : "));
-  Serial.println(sensorDs18b20.getSensorsCount());
+  Serial.println(temperatureSensors.getSensorsCount());
   Serial.println();
 
   // IF last index exist ?
   Serial.print(F("IF indexExist("));
-  Serial.print(sensorDs18b20.getSensorsCount() - 1);
+  Serial.print(temperatureSensors.getSensorsCount() - 1);
   Serial.print(F(") ==> "));
-  if (sensorDs18b20.indexExist(sensorDs18b20.getSensorsCount() - 1))
+  if (temperatureSensors.indexExist(temperatureSensors.getSensorsCount() - 1))
     Serial.println(F(" YES")); // YES if there is one sensor at least
   else
     Serial.println(F(" NO"));
 
   // IF last index +1 exist ?
   Serial.print(F("IF indexExist("));
-  Serial.print(sensorDs18b20.getSensorsCount());
+  Serial.print(temperatureSensors.getSensorsCount());
   Serial.print(F(") ==> "));
-  if (sensorDs18b20.indexExist(sensorDs18b20.getSensorsCount()))
+  if (temperatureSensors.indexExist(temperatureSensors.getSensorsCount()))
     Serial.println(F(" YES"));
   else
     Serial.println(F(" NO")); // Always NO
 
-  DeviceAddress deviceAddresses[sensorDs18b20.getSensorsCount()];
-  String stringAddresses[sensorDs18b20.getSensorsCount()];
+  DeviceAddress deviceAddresses[temperatureSensors.getSensorsCount()];
+  String stringAddresses[temperatureSensors.getSensorsCount()];
 
-  for (size_t i = 0; i < sensorDs18b20.getSensorsCount(); i++)
+  for (size_t i = 0; i < temperatureSensors.getSensorsCount(); i++)
   {
     Serial.print(F("[Sensor index="));
     Serial.print(i);
     Serial.println(F("]"));
 
     Serial.print(F(" * Print all temperatures formats by using index | RAW="));
-    Serial.print(sensorDs18b20.getTemperatureRAW(i));
+    Serial.print(temperatureSensors.getTemperatureRAW(i));
     Serial.print(F(" °C="));
-    Serial.print(sensorDs18b20.getTemperatureC(i));
+    Serial.print(temperatureSensors.getTemperatureC(i));
     Serial.print(F(" °F="));
-    Serial.println(sensorDs18b20.getTemperatureF(i));
+    Serial.println(temperatureSensors.getTemperatureF(i));
 
     Serial.println(F(" * Get DeviceAddress by using index & Store in deviceAddresses[]"));
-    sensorDs18b20.getDeviceAddress(i, deviceAddresses[i]);
+    temperatureSensors.getDeviceAddress(i, deviceAddresses[i]);
     Serial.print(F(" * convertDeviceAddressToString(deviceAddresses["));
     Serial.print(i);
     Serial.print(F("]) ==> "));
-    Serial.println(sensorDs18b20.convertDeviceAddressToString(deviceAddresses[i]));
+    Serial.println(temperatureSensors.convertDeviceAddressToString(deviceAddresses[i]));
 
     Serial.println(F(" * Store address String representation in stringAddresses[]"));
-    stringAddresses[i] = sensorDs18b20.getAddressString(i);
+    stringAddresses[i] = temperatureSensors.getAddressString(i);
     Serial.print(F(" * Sensor index="));
     Serial.print(i);
     Serial.print(F(" ==> "));
@@ -126,11 +126,11 @@ void testAdditionalsFunctions()
 
     Serial.println(F(" * Convert address String representation to DeviceAdress with convertDeviceAddressStringToDeviceAddress(stringAddresses[i], tmpAddress)"));
     DeviceAddress tmpAddress;
-    sensorDs18b20.convertDeviceAddressStringToDeviceAddress(stringAddresses[i], tmpAddress);
-    Serial.print(F(" * get back converted to strig sensorDs18b20.convertDeviceAddressToString(tmpAddress) ==> "));
-    Serial.println(sensorDs18b20.convertDeviceAddressToString(tmpAddress));
+    temperatureSensors.convertDeviceAddressStringToDeviceAddress(stringAddresses[i], tmpAddress);
+    Serial.print(F(" * get back converted to strig temperatureSensors.convertDeviceAddressToString(tmpAddress) ==> "));
+    Serial.println(temperatureSensors.convertDeviceAddressToString(tmpAddress));
     Serial.print(F(" * Compare converted String with DeviceAddress using compareTowDeviceAddresses(tmpAddress, deviceAddresses[i]) ==> "));
-    if (sensorDs18b20.compareTowDeviceAddresses(tmpAddress, deviceAddresses[i]))
+    if (temperatureSensors.compareTowDeviceAddresses(tmpAddress, deviceAddresses[i]))
       Serial.println(F("Match !"));
     else
       Serial.println(F("Don't match !")); // never call here
@@ -143,36 +143,36 @@ void testAdditionalsFunctions()
     */
 
   Serial.print(F("validateAddressesRange(deviceAddresses, 2) ==> "));
-  if (sensorDs18b20.validateAddressesRange(deviceAddresses, 2))
+  if (temperatureSensors.validateAddressesRange(deviceAddresses, 2))
     Serial.println(F(" Yes"));
   else
     Serial.println(F(" NO"));
 
   Serial.print(F("validateAddressesRange(deviceAddresses, 2, false) ==> "));
-  if (sensorDs18b20.validateAddressesRange(deviceAddresses, 2, false))
+  if (temperatureSensors.validateAddressesRange(deviceAddresses, 2, false))
     Serial.println(F(" Yes"));
   else
     Serial.println(F(" NO"));
 
   // Add +1 fake/missing address
-  DeviceAddress rangeInvalide[sensorDs18b20.getSensorsCount() + 1];
+  DeviceAddress rangeInvalide[temperatureSensors.getSensorsCount() + 1];
   // copy your valide addresses
   memcpy(
       rangeInvalide,
       deviceAddresses,
-      sizeof(deviceAddresses[0]) * sensorDs18b20.getSensorsCount());
+      sizeof(deviceAddresses[0]) * temperatureSensors.getSensorsCount());
   // create a fake address
   for (size_t i = 0; i < 8; i++)
-    rangeInvalide[sensorDs18b20.getSensorsCount()][i] = i;
+    rangeInvalide[temperatureSensors.getSensorsCount()][i] = i;
 
-  Serial.print(F("validateAddressesRange(rangeInvalide, sensorDs18b20.getSensorsCount()+1) ==> "));
-  if (sensorDs18b20.validateAddressesRange(rangeInvalide, sensorDs18b20.getSensorsCount() + 1))
+  Serial.print(F("validateAddressesRange(rangeInvalide, temperatureSensors.getSensorsCount()+1) ==> "));
+  if (temperatureSensors.validateAddressesRange(rangeInvalide, temperatureSensors.getSensorsCount() + 1))
     Serial.println(F(" Yes"));
   else
     Serial.println(F(" NO"));
 
-  Serial.print(F("validateAddressesRange(rangeInvalide, sensorDs18b20.getSensorsCount()+1, false) ==> "));
-  if (sensorDs18b20.validateAddressesRange(rangeInvalide, sensorDs18b20.getSensorsCount() + 1, false))
+  Serial.print(F("validateAddressesRange(rangeInvalide, temperatureSensors.getSensorsCount()+1, false) ==> "));
+  if (temperatureSensors.validateAddressesRange(rangeInvalide, temperatureSensors.getSensorsCount() + 1, false))
     Serial.println(F(" Yes"));
   else
     Serial.println(F(" NO"));
@@ -181,34 +181,34 @@ void testAdditionalsFunctions()
     * Validate range by string
     */
 
-  Serial.print(F("validateAddressesRange(stringAddresses, sensorDs18b20.getSensorsCount()) ==> "));
-  if (sensorDs18b20.validateAddressesRange(stringAddresses, sensorDs18b20.getSensorsCount()))
+  Serial.print(F("validateAddressesRange(stringAddresses, temperatureSensors.getSensorsCount()) ==> "));
+  if (temperatureSensors.validateAddressesRange(stringAddresses, temperatureSensors.getSensorsCount()))
     Serial.println(F(" Yes"));
   else
     Serial.println(F(" NO"));
 
-  Serial.print(F("validateAddressesRange(stringAddresses, sensorDs18b20.getSensorsCount(), false) ==> "));
-  if (sensorDs18b20.validateAddressesRange(stringAddresses, sensorDs18b20.getSensorsCount(), false))
+  Serial.print(F("validateAddressesRange(stringAddresses, temperatureSensors.getSensorsCount(), false) ==> "));
+  if (temperatureSensors.validateAddressesRange(stringAddresses, temperatureSensors.getSensorsCount(), false))
     Serial.println(F(" Yes"));
   else
     Serial.println(F(" NO"));
 
   // Add +1 fake/missing address
-  String invalideStringAddresses[sensorDs18b20.getSensorsCount() + 1];
+  String invalideStringAddresses[temperatureSensors.getSensorsCount() + 1];
   // copy your valide addresses
-  for (size_t i = 0; i < sensorDs18b20.getSensorsCount(); i++)
+  for (size_t i = 0; i < temperatureSensors.getSensorsCount(); i++)
     invalideStringAddresses[i] = stringAddresses[i];
   // create a fake address
-  invalideStringAddresses[sensorDs18b20.getSensorsCount()] = "0123456789abcdef";
+  invalideStringAddresses[temperatureSensors.getSensorsCount()] = "0123456789abcdef";
 
-  Serial.print(F("validateAddressesRange(invalideStringAddresses, sensorDs18b20.getSensorsCount()+1) ==> "));
-  if (sensorDs18b20.validateAddressesRange(invalideStringAddresses, sensorDs18b20.getSensorsCount() + 1))
+  Serial.print(F("validateAddressesRange(invalideStringAddresses, temperatureSensors.getSensorsCount()+1) ==> "));
+  if (temperatureSensors.validateAddressesRange(invalideStringAddresses, temperatureSensors.getSensorsCount() + 1))
     Serial.println(F(" Yes"));
   else
     Serial.println(F(" NO"));
 
-  Serial.print(F("validateAddressesRange(invalideStringAddresses, sensorDs18b20.getSensorsCount()+1, false) ==> "));
-  if (sensorDs18b20.validateAddressesRange(invalideStringAddresses, sensorDs18b20.getSensorsCount() + 1, false))
+  Serial.print(F("validateAddressesRange(invalideStringAddresses, temperatureSensors.getSensorsCount()+1, false) ==> "));
+  if (temperatureSensors.validateAddressesRange(invalideStringAddresses, temperatureSensors.getSensorsCount() + 1, false))
     Serial.println(F(" Yes"));
   else
     Serial.println(F(" NO"));
@@ -217,10 +217,10 @@ void testAdditionalsFunctions()
     * Map know sensors position index
     */
 
-  int8_t mapPositionIndex[sensorDs18b20.getSensorsCount()];
-  Serial.print(F("mapIndexPositionOfDeviceAddressRange(deviceAddresses, sensorDs18b20.getSensorsCount(), mapPositionIndex) ==> "));
-  sensorDs18b20.mapIndexPositionOfDeviceAddressRange(deviceAddresses, sensorDs18b20.getSensorsCount(), mapPositionIndex);
-  for (size_t i = 0; i < sensorDs18b20.getSensorsCount(); i++)
+  int8_t mapPositionIndex[temperatureSensors.getSensorsCount()];
+  Serial.print(F("mapIndexPositionOfDeviceAddressRange(deviceAddresses, temperatureSensors.getSensorsCount(), mapPositionIndex) ==> "));
+  temperatureSensors.mapIndexPositionOfDeviceAddressRange(deviceAddresses, temperatureSensors.getSensorsCount(), mapPositionIndex);
+  for (size_t i = 0; i < temperatureSensors.getSensorsCount(); i++)
   {
     Serial.print(F(" [index="));
     Serial.print(i);
@@ -231,10 +231,10 @@ void testAdditionalsFunctions()
   Serial.println();
 
   // use invalide range
-  int8_t invalideMapPositionIndex[sensorDs18b20.getSensorsCount() + 1];
-  Serial.print(F("mapIndexPositionOfDeviceAddressRange(rangeInvalide, sensorDs18b20.getSensorsCount()+1, invalideMapPositionIndex) ==> "));
-  sensorDs18b20.mapIndexPositionOfDeviceAddressRange(rangeInvalide, sensorDs18b20.getSensorsCount() + 1, invalideMapPositionIndex);
-  for (size_t i = 0; i < sensorDs18b20.getSensorsCount() + 1; i++)
+  int8_t invalideMapPositionIndex[temperatureSensors.getSensorsCount() + 1];
+  Serial.print(F("mapIndexPositionOfDeviceAddressRange(rangeInvalide, temperatureSensors.getSensorsCount()+1, invalideMapPositionIndex) ==> "));
+  temperatureSensors.mapIndexPositionOfDeviceAddressRange(rangeInvalide, temperatureSensors.getSensorsCount() + 1, invalideMapPositionIndex);
+  for (size_t i = 0; i < temperatureSensors.getSensorsCount() + 1; i++)
   {
     Serial.print(F(" [index="));
     Serial.print(i);
@@ -245,15 +245,15 @@ void testAdditionalsFunctions()
   Serial.println();
 
   // make a reversed invalide range
-  DeviceAddress reversedRangeInvalide[sensorDs18b20.getSensorsCount() + 1];
-  for (size_t i = 0; i < sensorDs18b20.getSensorsCount() + 1; i++)
+  DeviceAddress reversedRangeInvalide[temperatureSensors.getSensorsCount() + 1];
+  for (size_t i = 0; i < temperatureSensors.getSensorsCount() + 1; i++)
     for (size_t j = 0; j < 8; j++)
-      reversedRangeInvalide[i][j] = rangeInvalide[sensorDs18b20.getSensorsCount() - i][j];
+      reversedRangeInvalide[i][j] = rangeInvalide[temperatureSensors.getSensorsCount() - i][j];
 
-  int8_t reversedInvalideMapPositionIndex[sensorDs18b20.getSensorsCount() + 1];
-  Serial.print(F("mapIndexPositionOfDeviceAddressRange(reversedRangeInvalide, sensorDs18b20.getSensorsCount() + 1, reversedInvalideMapPositionIndex) ==> "));
-  sensorDs18b20.mapIndexPositionOfDeviceAddressRange(reversedRangeInvalide, sensorDs18b20.getSensorsCount() + 1, reversedInvalideMapPositionIndex);
-  for (size_t i = 0; i < sensorDs18b20.getSensorsCount() + 1; i++)
+  int8_t reversedInvalideMapPositionIndex[temperatureSensors.getSensorsCount() + 1];
+  Serial.print(F("mapIndexPositionOfDeviceAddressRange(reversedRangeInvalide, temperatureSensors.getSensorsCount() + 1, reversedInvalideMapPositionIndex) ==> "));
+  temperatureSensors.mapIndexPositionOfDeviceAddressRange(reversedRangeInvalide, temperatureSensors.getSensorsCount() + 1, reversedInvalideMapPositionIndex);
+  for (size_t i = 0; i < temperatureSensors.getSensorsCount() + 1; i++)
   {
     Serial.print(F(" [index="));
     Serial.print(i);

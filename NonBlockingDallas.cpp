@@ -198,7 +198,8 @@ void NonBlockingDallas::requestTemperature()
 
 /**
  * @brief Functions below are extensions to the origninal NonBlockingDallas
- * @author oOpen
+ 
+ * @author oOpen <git@logisciel.com>
  *
  * Litle breaking changes :
  * --> Change in function begin() : remove units parameters.
@@ -212,7 +213,7 @@ void NonBlockingDallas::requestTemperature()
 /**
  * @brief Get the number of sensors found
  *
- * @return Number of sensors found
+ * @return uint8_t Number of sensors found
  */
 uint8_t NonBlockingDallas::getSensorsCount()
 {

@@ -7,7 +7,6 @@
 #######################################
 NonBlockingDallas	KEYWORD1
 resolution	KEYWORD1
-unitsOfMeasure	KEYWORD1
 
 #######################################
 # Methods and Functions (KEYWORD2)
@@ -19,9 +18,32 @@ requestTemperature	KEYWORD2
 onIntervalElapsed	KEYWORD2
 onTemperatureChange	KEYWORD2
 onDeviceDisconnected	KEYWORD2
-setUnitOfMeasure	KEYWORD2
+getSensorsCount KEYWORD2
+indexExist KEYWORD2
+getDeviceAddress KEYWORD2
+getAddressString KEYWORD2
+getTemperatureRAW KEYWORD2
+getTemperatureC KEYWORD2
+getTemperatureF KEYWORD2
+getIndex KEYWORD2
+getTemperatureRAW KEYWORD2
+getTemperatureC KEYWORD2
+getTemperatureF KEYWORD2
+getIndex KEYWORD2
+getTemperatureRAW KEYWORD2
+getTemperatureC KEYWORD2
+getTemperatureF KEYWORD2
+compareTowDeviceAddresses KEYWORD2
+convertDeviceAddressToString KEYWORD2
+convertDeviceAddressStringToDeviceAddress KEYWORD2
+rawToCelsius KEYWORD2
+rawToFahrenheit KEYWORD2
+validateAddressesRange KEYWORD2
+validateAddressesRange KEYWORD2
+charToHex KEYWORD2
+towCharToHex KEYWORD2
+mapIndexPositionOfDeviceAddressRange KEYWORD2
 
 #######################################
 # Constants (LITERAL1)
 #######################################
-
