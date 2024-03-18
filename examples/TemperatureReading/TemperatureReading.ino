@@ -1,4 +1,3 @@
-
 //======================================================================
 //======================================================================
 //  Program: TemperatureReading.ino
@@ -44,28 +43,28 @@
 
 OneWire oneWire(ONE_WIRE_BUS);
 DallasTemperature dallasTemp(&oneWire);
-NonBlockingDallas sensorDs18b20(&dallasTemp);    //Create a new instance of the NonBlockingDallas class
+NonBlockingDallas temperatureSensors(&dallasTemp);    //Create a new instance of the NonBlockingDallas class
 
 void setup() {
   Serial.begin(9600);
   while (!Serial)
     ;
 
-  //Initialize the sensor passing the resolution, unit of measure and reading interval [milliseconds]
-  sensorDs18b20.begin(NonBlockingDallas::resolution_12, NonBlockingDallas::unit_C, TIME_INTERVAL);
+  //Initialize the sensor passing the resolution and reading interval [milliseconds]
+  temperatureSensors.begin(NonBlockingDallas::resolution_12, TIME_INTERVAL);
 
   //Callbacks
-  sensorDs18b20.onIntervalElapsed(handleIntervalElapsed);
-  sensorDs18b20.onTemperatureChange(handleTemperatureChange);
-  sensorDs18b20.onDeviceDisconnected(handleDeviceDisconnected);
+  temperatureSensors.onIntervalElapsed(handleIntervalElapsed);
+  temperatureSensors.onTemperatureChange(handleTemperatureChange);
+  temperatureSensors.onDeviceDisconnected(handleDeviceDisconnected);
   
   //Call the following function whenever you want to request a new temperature reading without waiting for TIME_INTERVAL to elapse
-  sensorDs18b20.requestTemperature();
+  temperatureSensors.requestTemperature();
 }
 
-void loop() {
-  
- sensorDs18b20.update();
+void loop()
+{
+  temperatureSensors.update();
   
   /*
    *  EVEN THOUGH THE SENSOR CONVERSION TAKES UP TO 750ms
@@ -76,13 +75,19 @@ void loop() {
 }
 
 //Invoked at every VALID sensor reading. "valid" parameter will be removed in a feature version
-void handleIntervalElapsed(float temperature, bool valid, int deviceIndex){
-
-  Serial.print("Sensor ");
+void handleIntervalElapsed(int deviceIndex, int32_t temperatureRAW)
+{
+  /* 
+  Serial.print(F("[NonBlockingDallas] handleIntervalElapsed ==> deviceIndex="));
   Serial.print(deviceIndex);
-  Serial.print(" temperature: ");
-  Serial.print(temperature);
-  Serial.println(" °C");
+  Serial.print(F(" | RAW="));
+  Serial.print(temperatureRAW);
+  Serial.print(F(" | "));
+  Serial.print(temperatureSensors.rawToCelsius(temperatureRAW));
+  Serial.print(F("°C | "));
+  Serial.print(temperatureSensors.rawToFahrenheit(temperatureRAW));
+  Serial.println(F("°F"));
+ */
 
   /*
    *  DO SOME AMAZING STUFF WITH THE TEMPERATURE
@@ -90,13 +95,17 @@ void handleIntervalElapsed(float temperature, bool valid, int deviceIndex){
 }
 
 //Invoked ONLY when the temperature changes between two VALID sensor readings. "valid" parameter will be removed in a feature version
-void handleTemperatureChange(float temperature, bool valid, int deviceIndex){
-
-  //Serial.print("Sensor ");
-  //Serial.print(deviceIndex);
-  //Serial.print(" new temperature: ");
-  //Serial.print(temperature);
-  //Serial.println(" °C");
+void handleTemperatureChange(int deviceIndex, int32_t temperatureRAW)
+{
+  Serial.print(F("[NonBlockingDallas] handleTemperatureChange ==> deviceIndex="));
+  Serial.print(deviceIndex);
+  Serial.print(F(" | RAW="));
+  Serial.print(temperatureRAW);
+  Serial.print(F(" | "));
+  Serial.print(temperatureSensors.rawToCelsius(temperatureRAW));
+  Serial.print(F("°C | "));
+  Serial.print(temperatureSensors.rawToFahrenheit(temperatureRAW));
+  Serial.println(F("°F"));
   
   /*
    *  DO SOME AMAZING STUFF WITH THE TEMPERATURE
@@ -104,8 +113,9 @@ void handleTemperatureChange(float temperature, bool valid, int deviceIndex){
 }
 
 //Invoked when the sensor reading fails
-void handleDeviceDisconnected(int deviceIndex){
-  Serial.print("Sensor ");
+void handleDeviceDisconnected(int deviceIndex)
+{
+  Serial.print(F("[NonBlockingDallas] handleDeviceDisconnected ==> deviceIndex="));
   Serial.print(deviceIndex);
-  Serial.println(" disconnected.");
+  Serial.println(F(" disconnected."));
 }
