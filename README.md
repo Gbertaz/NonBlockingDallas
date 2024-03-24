@@ -1,4 +1,5 @@
 [![arduino-library-badge](https://www.ardu-badge.com/badge/NonBlockingDallas.svg?)](https://www.ardu-badge.com/NonBlockingDallas)
+[![PlatformIO Registry](https://badges.registry.platformio.org/packages/gbertaz/library/NonBlockingDallas.svg)](https://registry.platformio.org/libraries/gbertaz/NonBlockingDallas)
 
 # Non blocking temperature sensor library for Arduino
 
@@ -28,6 +29,7 @@ The library is available from the Arduino Library Manager: load the Arduino IDE,
 Click the following badge for a complete installation guide
 
 [![arduino-library-badge](https://www.ardu-badge.com/badge/NonBlockingDallas.svg?)](https://www.ardu-badge.com/NonBlockingDallas)
+[![PlatformIO Registry](https://badges.registry.platformio.org/packages/gbertaz/library/NonBlockingDallas.svg)](https://registry.platformio.org/libraries/gbertaz/NonBlockingDallas)
 
 ## PlatformIO
 
